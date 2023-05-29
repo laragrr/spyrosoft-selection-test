@@ -47,23 +47,15 @@ void stopping(bool& state) {
    }
 }
 
-
-void state_machine() {
-   if (!A) {
-      B = false;
-      C = false;
-   } 
-   else {
-      if (!B) {
-         C = false;
-
-      }
-   }
-}
-
 char get_stopping_state() {
    std::lock_guard<std::mutex> guard(mu);
    return stopping_state;
+}
+
+
+void set_stopping_state(char c) {
+   std::lock_guard<std::mutex> guard(mu);
+   stopping_state = c;
 }
 
 void state_manager() {
@@ -85,13 +77,9 @@ void state_manager() {
          default:
             break;
          }
+         set_stopping_state('.');
       }
    }
-}
-
-void set_stopping_state(char c) {
-   std::lock_guard<std::mutex> guard(mu);
-   stopping_state = c;
 }
 
 void reading_input() {
